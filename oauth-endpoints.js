@@ -24,17 +24,46 @@ var server = express();
 var bodyParser = require('body-parser');
 server.use(bodyParser.json());    
 server.use(bodyParser.urlencoded({ extended: false }))
+server.post('/', function(req,res,next){
+    req.body.name='vel';
+    next();
+});
+
+server.use(function(req, res, next){
+	    //req.body.name='vel';
+      req.body.client_id=req.headers.client_id||null;
+      req.body.client_secret=req.headers.client_secret||null;
+      req.body.grant_type=req.headers.grant_type||null;
+      req.body.scope=req.headers.scope||null;
+      req.body.scopes=req.headers.scopes||null;
+      req.body.refresh_token=req.headers.refresh_token||null;
+      req.body.token=req.headers.token||null;
+	    next();
+});
+
+
+// server.get('/authorize', middleware.handleAuthorize());
+// server.post('/accesstoken', middleware.handleAccessToken());
+// server.post('/invalidate', middleware.invalidateToken());
+// server.post('/refresh', middleware.refreshToken());
+
+// server.get('/protected', middleware.authenticate('read'),
+//   function(req, res) {
+//     res.json({message:'success!'});
+//   }
+// );
 
 server.get('/authorize', middleware.handleAuthorize());
-server.post('/accesstoken', middleware.handleAccessToken());
-server.post('/invalidate', middleware.invalidateToken());
-server.post('/refresh', middleware.refreshToken());
+server.post('/v1/auth/token', middleware.handleAccessToken());
+server.post('/v1/auth/token/invalidate', middleware.invalidateToken());
+server.post('/v1/auth/token/refresh', middleware.refreshToken());
 
-server.get('/protected', middleware.authenticate('read'),
+server.get('/v1/dashboard', middleware.authenticate('read'),
   function(req, res) {
     res.json({message:'success!'});
   }
 );
+
 
 
 // server.post('/devapp', oauthHelper.createApp(req.body,function(err, app) {
@@ -42,7 +71,7 @@ server.get('/protected', middleware.authenticate('read'),
 //     var myapp=app;
 // }));
 
-server.post('/devapp', function(req,res){ 
+server.post('v1/auth/devapp', function(req,res){ 
 oauthHelper.createApp(req.body,function(err, app) {
  if (err) { throw err; }
     //var myapp=app;
