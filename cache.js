@@ -4,7 +4,7 @@ var volos = require('./config/volos').default;
 var proxy = require('./lib/proxy');
 var _ = require('underscore');
 
-// create Volos cache
+// create Volos cache updated
 var cache = volos.cache.create('cache', _.extend({
   ttl: 1000
 }, volos.config));
